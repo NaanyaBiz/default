@@ -4,21 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Get the app | The Wyndham Club</title>
-<meta name="description" content="Download the golf and darts apps used at The Wyndham Club.">
+<meta name="description" content="Download the GOLFZON Global app used in the golf bays at The Wyndham Club.">
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/png" href="https://the-wyndham-club.imgix.net/media/site/e7dfec8b07-1792400252/twc_favicon_192x192.png?auto=compress&w=32&h=32">
 <!--
-  The Wyndham Club - app download page (golf + darts), one file.
+  The Wyndham Club - app download page (golf for now; built to take more apps).
 
   Live at:   https://thewyndhamclub.co.nz/app
-  QR codes:  https://thewyndhamclub.co.nz/app?golf   -> GOLFZON Global
-             https://thewyndhamclub.co.nz/app?darts  -> Dartsee
-  (?app=golf / ?app=darts also work.)
+  QR code:   https://thewyndhamclub.co.nz/app?golf  -> GOLFZON Global
+             (?app=golf also works; plain /app currently behaves the same,
+             because golf is the only app listed)
 
-  With ?golf or ?darts: iPhone/iPad go straight to the App Store, Android goes
-  straight to Google Play; computers see that app's two buttons.
-  With no parameter: shows both apps, no redirect.
-  Without JavaScript: shows both apps with working buttons.
+  iPhone/iPad go straight to the App Store, Android goes straight to
+  Google Play; computers see the two buttons.
+  Without JavaScript: shows the buttons, which work as normal links.
+
+  Adding another app later (e.g. darts): copy the golf <section>, give it
+  id="app-<name>", and add "<name>" to the APPS list in the script. Its QR
+  code is then /app?<name>, and plain /app shows all apps without redirecting.
 
   Self-contained: no external scripts, no cookies, no tracking, no data collected.
   To change a store link, edit the button's href below. The script reads the
@@ -79,25 +82,19 @@ a.btn.primary{background:var(--black);color:var(--off-white)}
     <a class="btn" data-store="android" href="https://play.google.com/store/apps/details?id=com.golfzon.ggdr">Download for Android</a>
   </div>
 </section>
-<section class="app" id="app-darts" data-name="Dartsee">
-  <h2><span class="kicker">Darts</span>Dartsee</h2>
-  <p>Track your scores and stats from your sessions on the Dartsee boards.</p>
-  <div class="btns">
-    <a class="btn" data-store="ios" href="#DARTS-IOS-TODO">Download for iPhone &amp; iPad</a>
-    <a class="btn" data-store="android" href="#DARTS-ANDROID-TODO">Download for Android</a>
-  </div>
-</section>
 <a class="back" href="/">thewyndhamclub.co.nz</a>
 </main>
 <script>
 (function () {
-  var APPS = ["golf", "darts"];
-  // Accept ?golf, ?darts, ?app=golf, ?app=darts (any case).
+  var APPS = ["golf"];
+  // Accept ?golf or ?app=golf (any case).
   var q = (location.search || "").slice(1).toLowerCase();
   var m = q.match(/(?:^|&)app=([a-z]+)/);
   var key = m ? m[1] : q.split(/[&=]/)[0];
-  if (key === "dart") key = "darts";
-  if (APPS.indexOf(key) < 0) return;            // no/unknown app: show both
+  if (APPS.indexOf(key) < 0) {
+    if (APPS.length !== 1) return;              // several apps, none chosen: show all
+    key = APPS[0];                              // only one app listed: use it
+  }
 
   var section = document.getElementById("app-" + key);
   APPS.forEach(function (k) { if (k !== key) document.getElementById("app-" + k).hidden = true; });
